@@ -1,25 +1,48 @@
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
 
-export default App;
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Auto Complete Component: <br/><br/></h2>
+          <auto-complete id="autocomp" data=""></auto-complete>
+        </header>
+      </div>
+    );
+  }
+
+
+  fetchList() {
+    fetch('https://pokeapi.co/api/v2/pokemon?offset=0&limit=151')
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+
+            var jsonRes = json.results;
+
+            var array = [];
+
+            for (var i = 0; i < jsonRes.length; i++) {
+                var obj = jsonRes[i];
+
+                array.push(obj.name);
+            }
+
+            var listOfElems = document.getElementById("autocomp");
+            console.log(array);
+            
+            listOfElems.setAttribute("data", array);
+        }).catch(function(error) {
+            console.log(error);
+        });
+  }
+
+  componentDidMount() {
+    this.fetchList();
+  }
+}
